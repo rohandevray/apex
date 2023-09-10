@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Products</h1>
+    {% for product in products %}
+    <div class="block">
+      <h1>{{product.title}}</h1>
+      <p>{{product.description}}</p>
+      <p>$ {{product.price}}</p>
+      <img src="{{product.product_image}}" alt="image-T" width="400px" height="200px">
+      {% if product.status == True %}
+        <p>Status: Available</p>
+      {% else %}
+        <p>Status: Out of stock</p>
+      {% endif %}
+      <button>View More</button>
+      <button>Buy Now</button>
+    </div>
+    {% endfor %}
+
+</body>
+</html>
