@@ -1,27 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'main.html' %}
+{% block content %}
     <h1>Products</h1>
+    <button><a href="{% url 'add-product' %}">Add product</a></button>
     {% for product in products %}
     <div class="block">
       <h1>{{product.title}}</h1>
       <p>{{product.description}}</p>
       <p>$ {{product.price}}</p>
-      <img src="{{product.product_image}}" alt="image-T" width="400px" height="200px">
+      <img src="{{product.product_image.url}}" alt="image-T" width="400px" height="200px">
       {% if product.status == True %}
         <p>Status: Available</p>
       {% else %}
         <p>Status: Out of stock</p>
       {% endif %}
-      <button>View More</button>
+      <button> <a href="{% url 'product' product.id %}">View More</a></button>
       <button>Buy Now</button>
     </div>
     {% endfor %}
-
-</body>
-</html>
+{% endblock %}
