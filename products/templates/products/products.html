@@ -1,6 +1,7 @@
 {% extends 'main.html' %}
 {% block content %}
     <h1>Products</h1>
+    <h2> <a href="{% url 'mycart' %}">Cart</a></h2>
     <button><a href="{% url 'add-product' %}">Add product</a></button>
     {% for product in products %}
     <div class="block">
@@ -10,11 +11,12 @@
       <img src="{{product.product_image.url}}" alt="image-T" width="400px" height="200px">
       {% if product.status == True %}
         <p>Status: Available</p>
+        <button><a href="{% url 'addcart' %}">add to cart</a></button>
       {% else %}
         <p>Status: Out of stock</p>
       {% endif %}
       <button> <a href="{% url 'product' product.id %}">View More</a></button>
-      <button>Buy Now</button>
+      
     </div>
     {% endfor %}
 {% endblock %}

@@ -2,10 +2,7 @@
 {% block content %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {% for field in form %}
-    <label for="fname">{{field.label}}</label><br>
-    {{field}}
-   {% endfor %}
+    {{form.as_p}}
    <input type="submit" value="Submit">
   </form>
 {% endblock %}
