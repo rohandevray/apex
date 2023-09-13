@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from .models import Product
 from .forms import ProductForm
 # Create your views here.
@@ -45,12 +45,28 @@ def deleteproduct(request,pk):
     return redirect('products')
 
 
-def mycart(request):
-    return render(request,"products/cart.html")
-
-def additems(request,pk):
+def toggle_status(request,pk):
     product = Product.objects.get(id=pk)
-    return render(request,"products/quantity-form.html")
+    product.active = True
+    product.save()
+    return redirect('products')
 
-def payement(request):
+def delete_item(request,pk):
+    product = Product.objects.get(id=pk)
+    product.active = False
+    product.save()
+    return redirect('mycart')
+
+
+def mycart(request):
+    products = Product.objects.filter(active=True)
+    length = products.__len__()
+    context = {'products':products,'length':length}
+    return render(request,"products/cart.html",context)
+
+
+def checkout(request):
+    return render(request,"products/checkout.html")
+
+def payment(request):
     return render(request,"products/payment.html")

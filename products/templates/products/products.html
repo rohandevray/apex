@@ -8,15 +8,14 @@
       <h1>{{product.title}}</h1>
       <p>{{product.description}}</p>
       <p>$ {{product.price}}</p>
-      <img src="{{product.product_image.url}}" alt="image-T" width="400px" height="200px">
+      <img src="{{product.product_image.url}}" alt="image-T" width="400px" height="200px" object-fit="cover">
       {% if product.status == True %}
         <p>Status: Available</p>
-        <button><a href="{% url 'addcart' %}">add to cart</a></button>
+        <button><a href="{% url 'toggle' product.id %}">add to cart</a></button>
       {% else %}
         <p>Status: Out of stock</p>
       {% endif %}
-      <button> <a href="{% url 'product' product.id %}">View More</a></button>
-      
+      <button><a href="{% url 'product' product.id %}">View More</a></button>
     </div>
     {% endfor %}
 {% endblock %}

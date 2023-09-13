@@ -7,16 +7,15 @@ class Product(models.Model):
     description = models.TextField(null=True,blank=True)
     product_image = models.ImageField(null=True,blank=True)
     price = models.IntegerField(null=True,blank=True)
-    status = models.BooleanField(null=True,blank=True) 
+    status = models.BooleanField(null=True,blank=True)
+    active = models.BooleanField(null=True,blank=True,default=False) 
     created = models.DateTimeField(auto_now_add=True,null=True)
     def __str__(self):
         return self.title
     
+    # @property
+    # def getTotalPrice(self):
+    #     total = self.price * 
 
-class Cart(models.Model):
-    #one-to-one with user login 
-    title = models.CharField(max_length=200,default="MYCART")
-    items = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
-    quantity = models.IntegerField(null=True,blank=True,default=0)
-    def __str__(self):
-        return self.title
+    
+
