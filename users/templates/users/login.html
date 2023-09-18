@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+{% block content %}
+
+
+<body>
+    <section class="container">
+        <div class="login-container">
+            <div class="circle circle-one"></div>
+            <div class="form-container">
+                <img src="">
+                <h1 class="opacity">LOGIN</h1>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" placeholder="USERNAME" name="username"/>
+                    <input type="password" placeholder="PASSWORD" name="password" />
+                    <input type="submit" value="Login" />
+                </form>
+                <div class="register-forget opacity">
+                    <a href="{% url 'register' %}">REGISTER</a>
+                    <a href="">FORGOT PASSWORD</a>
+                </div>
+            </div>
+            <div class="circle circle-two"></div>
+        </div>
+        <div class="theme-btn-container"></div>
+    </section>
+</body>
+{% endblock %}
