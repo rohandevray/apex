@@ -74,6 +74,8 @@ def delete_item(request,pk):
     product.save()
     return redirect('mycart')
 
+def wishlist(request):
+    return render(request,"products/wishlist.html")
 
 def mycart(request):
     products = Product.objects.filter(active=True)

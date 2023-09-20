@@ -208,7 +208,7 @@
             
               </li>
               <li>
-                <a href="#" class="rounded-circle bg-light p-2 mx-1">
+                <a href="{% url 'wishlist' %}" class="rounded-circle bg-light p-2 mx-1">
                   <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#heart"></use></svg>
                 </a>
               </li>
@@ -641,7 +641,7 @@
                     <div class="col">
                       <div class="product-item">
                         <span class="badge bg-success position-absolute m-3">-30%</span>
-                        <a href="#" class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></a>
+                        <a href="{% url 'toggle' product.id %}" class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></a>
                         <figure>
                           <a href="{% url 'product' product.id %}" title="Product Title">
                             <img src="{{product.product_image.url}}"  class="tab-image">
