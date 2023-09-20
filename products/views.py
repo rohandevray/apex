@@ -1,7 +1,21 @@
 from django.shortcuts import render,redirect,HttpResponse
+from django.contrib import messages
 from .models import Product
+from users.models import Profile
 from .forms import ProductForm
+
 # Create your views here.
+
+
+def homePage(request):
+    products = Product.objects.all()
+    if request.user.is_authenticated:
+        user=request.user
+        profile = Profile.objects.get(user=user)
+    else:
+        return redirect("login")
+    context ={'profile': profile,'products':products}
+    return render(request,"products/home.html",context)
 
 def products(request):
     products = Product.objects.all()
@@ -20,6 +34,7 @@ def addproduct(request):
         if form.is_valid():
             product = form.save(commit=False)
             product.save()
+            messages.success(request,"Product was added successfully")
             return redirect("products")
     context= {'form':form}
     return render(request,"products/product-form.html",context)
@@ -34,6 +49,7 @@ def updateproduct(request,pk):
         if form.is_valid():
             product = form.save() 
             # as the project is already save we just have to save the form variables
+            messages.success(request,"Product was updated successfully!")
             return redirect('products')
     context ={'form':form}
     return render(request,"products/product-form.html",context)
@@ -42,6 +58,7 @@ def updateproduct(request,pk):
 def deleteproduct(request,pk):
     product=Product.objects.get(id=pk)
     product.delete()
+    messages.success(request,"Product was deleted successfully!")
     return redirect('products')
 
 

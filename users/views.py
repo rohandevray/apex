@@ -2,6 +2,7 @@ from django.shortcuts import render , HttpResponse , redirect
 from django.contrib.auth import authenticate ,login,logout
 from .models import Profile
 from .forms import ProfileForm
+from django.contrib import messages
 from django.contrib.auth.models import User
 # Create your views here.
 
@@ -15,20 +16,22 @@ def loginUser(request):
         try:
            user = User.objects.get(username=username)
         except:
-           return HttpResponse("ERROR404!")
+           messages.error(request,"There is some issue!")
         
         user = authenticate(username=username,password=password)
         if user is not None:
             login(request,user)
-            return redirect("products")
+            messages.success(request,"Logged In Successfully!")
+            return redirect("home")
         else:
-            return HttpResponse("login failed!")
+            messages.error(request,"User is not found!")
     return render(request,"users/login.html")
 
 
 def logoutUser(request):
     logout(request)
-    return redirect("products")
+    messages.success(request,"Logged Out successfully!")
+    return redirect("home")
 
 
 def registerUser(request):
@@ -49,12 +52,32 @@ def registerUser(request):
             
             if user is None:
                 user = User.objects.create(username=username,password=password1,first_name=name,email=email_id)
+                messages.info(request,"User was registered")
                 return redirect('login')
     return render(request,"users/register.html")
 
 
-def userProfile(request):
+def updateProfile(request):
     user = request.user
     profile = Profile.objects.get(user=user)
+    form = ProfileForm(instance=profile)
+    if request.method =='POST':
+        form = ProfileForm(request.POST,request.FILES,instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.info(request,"Profile was updated!")
+            return redirect("profile")
+    context={'form':form,'profile':profile}
+    return render(request,"users/profile_form.html",context)
+
+
+def userProfile(request):
+    user = None
+    if request.user.is_authenticated :
+        user =request.user
+    else:
+        return HttpResponse("go back")
+       
+    profile = Profile.objects.get(user=user)   
     context ={'profile':profile}
     return render(request,"users/profile.html",context)

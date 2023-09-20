@@ -5,24 +5,35 @@
        
         <div class=" image d-flex flex-column justify-content-center align-items-center">
              <button class="btn btn-secondary">
-                 <img src="{{profile.profile_image.url}}" height="100" width="100" /></button>
+                 {% if profile.profile_image %}
+                 <img src="{{profile.profile_image.url}}" height="100" width="100" />
+                 {% else %}
+                 <img src="https://vignette2.wikia.nocookie.net/sonicpokemon/images/7/77/Pikachu.png/revision/latest?cb=20120603213349" height="100" width="100" />
+                 {% endif %}
+                </button>
                   <span class="name mt-3">{{profile.name}}</span> <span class="idd">@{{profile.username}}</span> 
                   <div class="d-flex flex-row justify-content-center align-items-center gap-2">
-                     <span class="idd1">{{profile.id}}</span> <span><i class="fa fa-copy"></i></span> </div>
-                      <div class="d-flex flex-row justify-content-center align-items-center mt-3"> <span class="number">1069 <span class="follow">Followers</span></span> 
-                      </div> <div class=" d-flex mt-2"> <button class="btn1 btn-dark">Edit Profile</button> 
-                      </div> <div class="text mt-3"> <span>Eleanor Pena is a creator of minimalistic x bold graphics and digital artwork.<br><br> Artist/ Creative Director by Day #NFT minting@ with FND night. </span>
+                     <span class="idd1"><span><i class="fa-solid fa-phone"></i>  +91-{{profile.contact}}</span></span></div>
+                      <div class="d-flex flex-row justify-content-center align-items-center mt-3"> <span class="number">0<span class="follow"> Orders</span></span> 
+                      </div> 
+                      </div>
+                       <div class="text mt-3"> <span><i class="fa-solid fa-location-dot"></i>  {{profile.location}} </span>
                        </div> 
+                       <div class="text mt-3"><span><i class="fa-solid fa-envelope"></i> {{profile.email}}</span>
+                       </div>
                        <div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center"> 
-                       <span><i class="fa fa-twitter"></i></span> 
-                       <span><i class="fa fa-facebook-f"></i></span> 
-                       <span><i class="fa fa-instagram"></i></span>
-                       <span><i class="fa fa-linkedin"></i></span>
+                       <span><i class="fa-brands fa-twitter"></i></span> 
+                       <span><i class="fa-brands fa-facebook"></i></i></span> 
+                       <span><i class="fa-brands fa-instagram"></i></span>
+                       <span><i class="fa-brands fa-linkedin"></i></span>
                        </div> 
                        <div class=" px-2 rounded mt-4 date "> 
                         <span class="join">{{profile.created}}</span> 
                        </div> 
-                    </div>
+                       <div class=" d-flex mt-2"> 
+                        <button class="btn1 btn-dark" ><a href="{% url 'update_profile' %}">Edit Profile</a></button>
+                        <button class="btn1 btn-dark"><a href="{% url 'logout' %}">Logout</a></button>
+                      </div>
                     
             </div>
 </div>
