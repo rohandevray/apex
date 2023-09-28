@@ -2,7 +2,7 @@
 {% block content %}
     <h1>Products</h1>
     <h1><a href="{% url 'profile' %}">Profile</a></h1>
-    <h2> <a href="{% url 'mycart' %}">Cart</a></h2>
+    <h2> <a href="">Cart</a></h2>
     {% if request.user.is_authenticated %}
       <p><a href="{% url 'logout' %}">logout</a></p>
     {% else %}
@@ -17,11 +17,11 @@
       <img src="{{product.product_image.url}}" alt="image-T" width="400px" height="200px" object-fit="cover">
       {% if product.status == True %}
         <p>Status: Available</p>
-        <button><a href="{% url 'toggle' product.id %}">add to cart</a></button>
+        <button><a href="">add to cart</a></button>
       {% else %}
         <p>Status: Out of stock</p>
       {% endif %}
-      <button><a href="{% url 'product' product.id %}">View More</a></button>
+      <button><a href="">View More</a></button>
     </div>
     {% endfor %}
 {% endblock %}

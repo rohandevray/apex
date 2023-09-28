@@ -1,4 +1,5 @@
-from django.shortcuts import render,redirect,HttpResponse
+from django.shortcuts import render,redirect,HttpResponse 
+from django.http import JsonResponse
 from django.contrib import messages
 from .models import Product
 from users.models import Profile
@@ -55,6 +56,12 @@ def updateproduct(request,pk):
     return render(request,"products/product-form.html",context)
 
 
+#updating cart 
+def updateItem(request):
+    return JsonResponse('Item was added',safe=False)
+
+# setting the safe parameter to False actually influences JSON to receive any Python Data Type.
+
 def deleteproduct(request,pk):
     product=Product.objects.get(id=pk)
     product.delete()
@@ -62,30 +69,36 @@ def deleteproduct(request,pk):
     return redirect('products')
 
 
-def toggle_status(request,pk):
-    product = Product.objects.get(id=pk)
-    product.active = True
-    product.save()
-    return redirect('products')
 
-def delete_item(request,pk):
-    product = Product.objects.get(id=pk)
-    product.active = False
-    product.save()
-    return redirect('mycart')
+
+
+
+# def mycart(request):
+#     products = Product.objects.filter(active=True)
+#     length = products.__len__()
+#     context = {'products':products,'length':length}
+#     return render(request,"products/cart.html",context)
+
+
+
+
+# def toggle_status(request,pk):
+#     product = Product.objects.get(id=pk)
+#     product.active = True
+#     product.save()
+#     return redirect('products')
+
+# def delete_item(request,pk):
+#     product = Product.objects.get(id=pk)
+#     product.active = False
+#     product.save()
+#     return redirect('mycart')
 
 def wishlist(request):
     return render(request,"products/wishlist.html")
 
-def mycart(request):
-    products = Product.objects.filter(active=True)
-    length = products.__len__()
-    context = {'products':products,'length':length}
-    return render(request,"products/cart.html",context)
+# def checkout(request):
+#     return render(request,"products/checkout.html")
 
-
-def checkout(request):
-    return render(request,"products/checkout.html")
-
-def payment(request):
-    return render(request,"products/payment.html")
+# def payment(request):
+#     return render(request,"products/payment.html")
