@@ -16,7 +16,7 @@ class Product(models.Model):
 
 # CART (WHOLE ORDER)  
 class Order(models.Model):
-    profile = models.ForeignKey(Profile,null=True,blank=True,on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile,null=True,blank=True,on_delete=models.SET_NULL)
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
     transaction_id = models.CharField(max_length=100,null=True)
@@ -26,13 +26,10 @@ class Order(models.Model):
 
 # SINGLE ITEM attached to order/cart
 class OrderItem(models.Model):
-    product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
-    order = models.ForeignKey(Order,on_delete=models.CASCADE,null=True,blank=True)
+    product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
+    order = models.ForeignKey(Order,on_delete=models.SET_NULL,null=True)
     quantity = models.IntegerField(null=True,default=0,blank=True)
     item_added = models.DateTimeField(auto_now_add=True)
 
-    @property
-    def get_total(self):
-        return self.quantity * self.product.price
 
 

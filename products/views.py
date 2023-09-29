@@ -1,21 +1,35 @@
 from django.shortcuts import render,redirect,HttpResponse 
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import Product
+from .models import Product, Order, OrderItem
 from users.models import Profile
 from .forms import ProductForm
+import json , sys
 
 # Create your views here.
 
 
 def homePage(request):
-    products = Product.objects.all()
+    total= 0
     if request.user.is_authenticated:
         user=request.user
         profile = Profile.objects.get(user=user)
     else:
         return redirect("login")
-    context ={'profile': profile,'products':products}
+    
+    products = Product.objects.all()
+    order = Order.objects.get(profile=request.user.profile)
+    orderitems = OrderItem.objects.filter(order=order)
+    print("products",products)
+    print("order",order)
+    print("last",orderitems)
+    total =0
+    for item in orderitems:
+        a=item.quantity
+        b=item.product.price
+        total = total + a*b
+    items_count=orderitems.__len__()
+    context ={'profile': profile,'products':products,'orderitems':orderitems,'total':total,'items_count':items_count}
     return render(request,"products/home.html",context)
 
 def products(request):
@@ -58,6 +72,28 @@ def updateproduct(request,pk):
 
 #updating cart 
 def updateItem(request):
+    data = json.loads(request.body)
+    productId = data['productId']
+    action= data['action']
+    print('productId',productId)
+    print('action',action)
+
+    profile = request.user.profile
+    product = Product.objects.get(id=productId)
+    order,created = Order.objects.get_or_create(profile=profile,complete=False)
+    orderItem , created = OrderItem.objects.get_or_create(order=order,product=product)
+
+    if action =='add':
+        orderItem.quantity = (orderItem.quantity + 1)
+    elif action =='remove':
+        orderItem.quantity = (orderItem.quantity - 1)
+    
+    orderItem.save()
+
+    if orderItem.quantity <=0:
+        orderItem.delete()
+
+
     return JsonResponse('Item was added',safe=False)
 
 # setting the safe parameter to False actually influences JSON to receive any Python Data Type.
@@ -97,8 +133,16 @@ def deleteproduct(request,pk):
 def wishlist(request):
     return render(request,"products/wishlist.html")
 
-# def checkout(request):
-#     return render(request,"products/checkout.html")
+def checkout(request):
+    order = Order.objects.get(profile=request.user.profile)
+    orderitems = OrderItem.objects.filter(order=order)
+    total =0
+    for item in orderitems:
+        a=item.quantity
+        b=item.product.price
+        total = total + a*b
+    context={'orderitems':orderitems,'total':total}
+    return render(request,"products/checkout.html",context)
 
 # def payment(request):
 #     return render(request,"products/payment.html")

@@ -28,17 +28,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <script type="text/javascript">
+    <script type="text/javascript" >
          var user = '{{request.user}}'
          //creating csrf token 
-  function getCookie(name) {
-     var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
+         function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+           for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
             // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
             }
@@ -46,7 +46,7 @@
     }
     return cookieValue;
 }
-var csrftoken = getCookie('csrftoken');
+const csrftoken = getCookie('csrftoken');
     </script>
   </head>
   <body>
@@ -115,7 +115,7 @@ var csrftoken = getCookie('csrftoken');
 
  <!-- cart -->
 
-
+ 
     <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart" aria-labelledby="My Cart">
       <div class="offcanvas-header justify-content-center">
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -124,37 +124,28 @@ var csrftoken = getCookie('csrftoken');
         <div class="order-md-last">
           <h4 class="d-flex justify-content-between align-items-center mb-3">
             <span class="text-primary">Your cart</span>
-            <span class="badge bg-primary rounded-pill">3</span>
+            <span class="badge bg-primary rounded-pill">{{items_count}}</span>
           </h4>
           <ul class="list-group mb-3">
+
+            {% for item in orderitems %}
             <li class="list-group-item d-flex justify-content-between lh-sm">
               <div>
-                <h6 class="my-0">Growers cider</h6>
-                <small class="text-body-secondary">Brief description</small>
+                <h6 class="my-0">{{item.product.title}}</h6>
+                <small class="text-body-secondary">Quantity: {{item.quantity}}</small>
               </div>
-              <span class="text-body-secondary">$12</span>
+              <span class="text-body-secondary">${{item.product.price}}</span>
             </li>
-            <li class="list-group-item d-flex justify-content-between lh-sm">
-              <div>
-                <h6 class="my-0">Fresh grapes</h6>
-                <small class="text-body-secondary">Brief description</small>
-              </div>
-              <span class="text-body-secondary">$8</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-sm">
-              <div>
-                <h6 class="my-0">Heinz tomato ketchup</h6>
-                <small class="text-body-secondary">Brief description</small>
-              </div>
-              <span class="text-body-secondary">$5</span>
-            </li>
+            {% endfor %}
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (USD)</span>
-              <strong>$20</strong>
+              <strong>${{total}}</strong>
             </li>
           </ul>
-  
-          <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+          <a href="{% url 'checkout' %}">
+            <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+          </a>
+          
         </div>
       </div>
     </div>
@@ -245,8 +236,8 @@ var csrftoken = getCookie('csrftoken');
 
             <div class="cart text-end d-none d-lg-block dropdown">
               <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-                <span class="fs-6 text-muted dropdown-toggle">Your Cart</span>
-                <span class="cart-total fs-5 fw-bold">$1290.00</span>
+                <span class="fs-6 text-muted dropdown-toggle cart-refresh">Your Cart</span>
+                <span class="cart-total fs-5 fw-bold">${{total}}.00</span>
               </button>
             </div>
           </div>
@@ -672,13 +663,13 @@ var csrftoken = getCookie('csrftoken');
                         <div class="d-flex align-items-center justify-content-between">
                           <div class="input-group product-qty">
                               <span class="input-group-btn">
-                                  <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-type="minus">
+                                  <button type="button" class="quantity-left-minus btn btn-danger btn-number update-cart" data-type="minus" data-product="{{product.id}}" data-action="remove">
                                     <svg width="16" height="16"><use xlink:href="#minus"></use></svg>
                                   </button>
                               </span>
-                              <input type="text" id="quantity" name="quantity" class="form-control input-number" value="1">
+                              <input type="text" id="quantity" name="quantity" class="form-control input-number" value="0">
                               <span class="input-group-btn">
-                                  <button type="button" class="quantity-right-plus btn btn-success btn-number" data-type="plus">
+                                  <button type="button" class="quantity-right-plus btn btn-success btn-number update-cart" data-type="plus" data-product="{{product.id}}" data-action="add">
                                       <svg width="16" height="16"><use xlink:href="#plus"></use></svg>
                                   </button>
                               </span>

@@ -10,5 +10,7 @@ urlpatterns = [
     path('delete-product/<str:pk>/',views.deleteproduct,name="delete-product"),
     path('update_item/',views.updateItem,name="update_item"),
     path('wishlist/',views.wishlist,name="wishlist"),
+    path('checkout/',views.checkout,name="checkout"),
+
 ]
 
