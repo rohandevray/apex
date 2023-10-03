@@ -29,25 +29,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <script type="text/javascript" >
-         var user = '{{request.user}}'
-         //creating csrf token 
-         function getCookie(name) {
-          let cookieValue = null;
-          if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-           for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
+      var user = '{{request.user}}'
+      //creating csrf token 
+      function getCookie(name) {
+       let cookieValue = null;
+       if (document.cookie && document.cookie !== '') {
+         const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+         const cookie = cookies[i].trim();
+         // Does this cookie string begin with the name we want?
+         if (cookie.substring(0, name.length + 1) === (name + '=')) {
+             cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+             break;
+         }
+     }
+ }
+ return cookieValue;
 }
 const csrftoken = getCookie('csrftoken');
-    </script>
+ </script>
   </head>
   <body>
     {% if messages %}
@@ -132,9 +132,10 @@ const csrftoken = getCookie('csrftoken');
             <li class="list-group-item d-flex justify-content-between lh-sm">
               <div>
                 <h6 class="my-0">{{item.product.title}}</h6>
+                <small class="text-body-secondary">Price:${{item.product.price}}</small> <br>
                 <small class="text-body-secondary">Quantity: {{item.quantity}}</small>
               </div>
-              <span class="text-body-secondary">${{item.product.price}}</span>
+              <span class="text-body-secondary">${{item.get_total}}</span>
             </li>
             {% endfor %}
             <li class="list-group-item d-flex justify-content-between">
@@ -145,7 +146,6 @@ const csrftoken = getCookie('csrftoken');
           <a href="{% url 'checkout' %}">
             <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
           </a>
-          
         </div>
       </div>
     </div>
@@ -166,7 +166,6 @@ const csrftoken = getCookie('csrftoken');
         </div>
       </div>
     </div>
-
     <header>
       <div class="container-fluid">
         <div class="row py-3 border-bottom">
@@ -213,7 +212,7 @@ const csrftoken = getCookie('csrftoken');
                   <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#user"></use></svg>
                 </a>
                 {% else %}
-                <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i></a>
+                <a href="{% url 'login' %}"><i class="fa-solid fa-right-from-bracket"></i></a>
                 {% endif %}
             
               </li>
@@ -651,7 +650,7 @@ const csrftoken = getCookie('csrftoken');
                     <div class="col">
                       <div class="product-item">
                         <span class="badge bg-success position-absolute m-3">-30%</span>
-                        <a href="" class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></a>
+                        <button class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></button>
                         <figure>
                           <a href="{% url 'product' product.id %}" title="Product Title">
                             <img src="{{product.product_image.url}}"  class="tab-image">
@@ -659,7 +658,7 @@ const csrftoken = getCookie('csrftoken');
                         </figure>
                         <h3>{{product.title}}</h3>
                         <span class="qty">1 Unit</span><span class="rating"><svg width="24" height="24" class="text-primary"><use xlink:href="#star-solid"></use></svg> 4.5</span>
-                        <span class="price">${{product.price}}.00</span>
+                        <span class="price">${{product.price}}</span>
                         <div class="d-flex align-items-center justify-content-between">
                           <div class="input-group product-qty">
                               <span class="input-group-btn">

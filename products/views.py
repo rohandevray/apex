@@ -1,28 +1,26 @@
 from django.shortcuts import render,redirect,HttpResponse 
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import Product, Order, OrderItem
-from users.models import Profile
+from .models import Product, Order, OrderItem , ShippingAddress
+from users.models import Profile 
 from .forms import ProductForm
-import json , sys
+from .utils import cartData
+import json , datetime
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 
 
 def homePage(request):
     total= 0
-    if request.user.is_authenticated:
-        user=request.user
-        profile = Profile.objects.get(user=user)
-    else:
-        return redirect("login")
-    
     products = Product.objects.all()
-    order = Order.objects.get(profile=request.user.profile)
-    orderitems = OrderItem.objects.filter(order=order)
-    print("products",products)
-    print("order",order)
-    print("last",orderitems)
+    if request.user.is_authenticated:
+        data = cartData(request)
+        profile =request.user.profile
+    else:
+        return render(request,'products/home.html',{'products':products,'total':total})
+    orderitems = data['items']
     total =0
     for item in orderitems:
         a=item.quantity
@@ -32,10 +30,11 @@ def homePage(request):
     context ={'profile': profile,'products':products,'orderitems':orderitems,'total':total,'items_count':items_count}
     return render(request,"products/home.html",context)
 
-def products(request):
-    products = Product.objects.all()
-    context ={'products':products}
-    return render(request,"products/products.html",context)
+# def products(request):
+#     products = Product.objects.all()
+#     context ={'products':products}
+#     return render(request,"products/products.html",context)
+
 
 def product(request,pk):
     single_product = Product.objects.get(id=pk)
@@ -71,6 +70,7 @@ def updateproduct(request,pk):
 
 
 #updating cart 
+@login_required(redirect_field_name="login")
 def updateItem(request):
     data = json.loads(request.body)
     productId = data['productId']
@@ -104,45 +104,60 @@ def deleteproduct(request,pk):
     messages.success(request,"Product was deleted successfully!")
     return redirect('products')
 
-
-
-
-
-
-# def mycart(request):
-#     products = Product.objects.filter(active=True)
-#     length = products.__len__()
-#     context = {'products':products,'length':length}
-#     return render(request,"products/cart.html",context)
-
-
-
-
-# def toggle_status(request,pk):
-#     product = Product.objects.get(id=pk)
-#     product.active = True
-#     product.save()
-#     return redirect('products')
-
-# def delete_item(request,pk):
-#     product = Product.objects.get(id=pk)
-#     product.active = False
-#     product.save()
-#     return redirect('mycart')
-
 def wishlist(request):
     return render(request,"products/wishlist.html")
 
+@login_required(login_url="login")
 def checkout(request):
-    order = Order.objects.get(profile=request.user.profile)
-    orderitems = OrderItem.objects.filter(order=order)
-    total =0
+    if request.user.is_authenticated:
+        profile = request.user.profile
+        data = cartData(request)
+    else:
+        return render(request,"products/checkout.html")
+    orderitems = data['items']
+    sub_total =0
     for item in orderitems:
         a=item.quantity
         b=item.product.price
-        total = total + a*b
-    context={'orderitems':orderitems,'total':total}
+        sub_total = sub_total + a*b
+    total = float(sub_total)+float(43.20)
+    context={'orderitems':orderitems,'total':total,'sub_total':sub_total}
     return render(request,"products/checkout.html",context)
 
-# def payment(request):
-#     return render(request,"products/payment.html")
+@login_required(login_url="login")
+def payment(request):
+    flag=False
+    if request.user.is_authenticated:
+        profile = request.user.profile
+        data = cartData(request)
+        flag=True
+    else:
+        return render(request,"products/payment.html",{'flag':flag})  
+    order= data['order']
+    return render(request,"products/payment.html",{'flag':flag,'order':order})
+
+def processOrder(request):
+    transaction_id = datetime.datetime.now().timestamp()
+    data = json.loads(request.body)
+    if request.user.is_authenticated:
+        profile = request.user.profile
+        order,created = Order.objects.get_or_create(profile=profile,complete=False)
+        total = float(data['form']['total'])
+        order.transaction_id = transaction_id
+        if total == order.get_cart_total:
+            order.complete = True
+        order.save()
+
+        ShippingAddress.objects.create(
+            profile =profile,
+            order = order,
+            address = data['shipping']['address'],
+            city = data['shipping']['city'],
+            state = data['shipping']['state'],
+            zipcode = data['shipping']['zipcode'],
+        )
+        
+    else:
+        print("user is not logged in!")
+    print('data',data)
+    return JsonResponse('payment is done! Thanks for shopping',safe=False)

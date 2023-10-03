@@ -42,3 +42,10 @@ function upadateUserOrder(productId,action) {
         location.reload()
     });
 }
+
+var heartBtns=document.getElementsByClassName("btn-wishlist")
+for(var i=0;i< heartBtns.length;i++){
+     heartBtns[i].addEventListener('click',function(){
+         console.log("added to wishlist")
+     })
+}
