@@ -202,7 +202,7 @@ const csrftoken = getCookie('csrftoken');
           <div class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
             <div class="support-box text-end d-none d-xl-block">
               <span class="fs-6 text-muted">For Support?</span>
-              <h5 class="mb-0">+980-34984089</h5>
+              <h6 class="mb-0">+980349840</h6>
             </div>
 
             <ul class="d-flex justify-content-end list-unstyled m-0">
@@ -217,7 +217,7 @@ const csrftoken = getCookie('csrftoken');
             
               </li>
               <li>
-                <a href="{% url 'wishlist' %}" class="rounded-circle bg-light p-2 mx-1">
+                <a href="{% url 'show_wishlist' %}" class="rounded-circle bg-light p-2 mx-1">
                   <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#heart"></use></svg>
                 </a>
               </li>
@@ -259,7 +259,7 @@ const csrftoken = getCookie('csrftoken');
                   <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
 
-                <div class="offcanvas-body">
+                <!-- <div class="offcanvas-body">
               
                   <select class="filter-categories border-0 mb-0 me-5">
                     <option>Shop by Departments</option>
@@ -309,7 +309,7 @@ const csrftoken = getCookie('csrftoken');
                     </li>
                   </ul>
                 
-                </div>
+                </div> -->
 
               </div>
 
@@ -469,27 +469,6 @@ const csrftoken = getCookie('csrftoken');
                   <img src="static\images\icon-vegetables-broccoli.png" alt="Category Thumbnail">
                   <h3 class="category-title">Fruits & Veges</h3>
                 </a>
-                <a href="category.html" class="nav-link category-item swiper-slide">
-                  <img src="static\images\icon-vegetables-broccoli.png" alt="Category Thumbnail">
-                  <h3 class="category-title">Fruits & Veges</h3>
-                </a>
-                <a href="category.html" class="nav-link category-item swiper-slide">
-                  <img src="static\images\icon-vegetables-broccoli.png" alt="Category Thumbnail">
-                  <h3 class="category-title">Fruits & Veges</h3>
-                </a>
-                <a href="category.html" class="nav-link category-item swiper-slide">
-                  <img src="static\images\icon-vegetables-broccoli.png" alt="Category Thumbnail">
-                  <h3 class="category-title">Fruits & Veges</h3>
-                </a>
-                <a href="category.html" class="nav-link category-item swiper-slide">
-                  <img src="static\images\icon-vegetables-broccoli.png" alt="Category Thumbnail">
-                  <h3 class="category-title">Fruits & Veges</h3>
-                </a>
-                <a href="category.html" class="nav-link category-item swiper-slide">
-                  <img src="static\images\icon-vegetables-broccoli.png" alt="Category Thumbnail">
-                  <h3 class="category-title">Fruits & Veges</h3>
-                </a>
-                
               </div>
             </div>
 
@@ -650,7 +629,7 @@ const csrftoken = getCookie('csrftoken');
                     <div class="col">
                       <div class="product-item">
                         <span class="badge bg-success position-absolute m-3">-30%</span>
-                        <button class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></button>
+                        <button class="btn-wishlist" data-product="{{product.id}}"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></button>
                         <figure>
                           <a href="{% url 'product' product.id %}" title="Product Title">
                             <img src="{{product.product_image.url}}"  class="tab-image">

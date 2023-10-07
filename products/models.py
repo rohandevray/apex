@@ -53,3 +53,7 @@ class ShippingAddress(models.Model):
     def __str__(self):
         return str(self.address)
 
+
+class Wishlist(models.Model):
+    profile = models.ForeignKey(Profile,on_delete=models.SET_NULL,null=True)
+    product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)

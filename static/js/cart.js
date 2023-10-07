@@ -10,7 +10,8 @@ for (var i = 0; i < updateBtns.length; i++){
         if(user=="Anonymous User"){
            console.log("User is not authenicated")
         }else{
-           upadateUserOrder(productId,action)
+           var url = '/update_item/'
+           upadateUserOrder(productId,action,url)
         }
 	})
 }
@@ -22,11 +23,23 @@ for(var i=0;i< cartBtns.length;i++){
     })
 }
 
-function upadateUserOrder(productId,action) {
-    console.log("USer is logging in!")
-    var url = '/update_item/'
 
-    fetch(url, {
+
+var heartBtns=document.getElementsByClassName("btn-wishlist")
+for(var i=0;i< heartBtns.length;i++){
+     heartBtns[i].addEventListener('click',function(){
+         var productId = this.dataset.product
+         var action=''
+         var url ='/wishlist/'
+         upadateUserOrder(productId,action,url)
+     })
+}
+
+async function upadateUserOrder(productId,action,url) {
+    console.log("USer is logging in!")
+    console.log(productId)
+
+    const response = await fetch(url, {
         method:'POST',
         headers:{
             'Content-Type':'application/json',
@@ -34,18 +47,6 @@ function upadateUserOrder(productId,action) {
         }, 
         body:JSON.stringify({"productId":productId, "action":action})
     })
-    .then((response) => {
-       return response.json();
-    })
-    .then((data) => {
-        console.log((data))
-        location.reload()
-    });
-}
-
-var heartBtns=document.getElementsByClassName("btn-wishlist")
-for(var i=0;i< heartBtns.length;i++){
-     heartBtns[i].addEventListener('click',function(){
-         console.log("added to wishlist")
-     })
+    const data = await response.json()
+    console.log(data)
 }

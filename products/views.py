@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect,HttpResponse 
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import Product, Order, OrderItem , ShippingAddress
+from .models import Product, Order, OrderItem , ShippingAddress , Wishlist
 from users.models import Profile 
 from .forms import ProductForm
 from .utils import cartData
@@ -104,8 +104,18 @@ def deleteproduct(request,pk):
     messages.success(request,"Product was deleted successfully!")
     return redirect('products')
 
-def wishlist(request):
-    return render(request,"products/wishlist.html")
+@login_required(login_url="login")
+def addToWishlist(request):
+    data = json.loads(request.body)
+    product_id = data['productId']
+    profile = request.user.profile
+    product = Product.objects.get(id=product_id)
+    wishlist , created = Wishlist.objects.get_or_create(profile=profile,product=product)
+    return JsonResponse('Added to wishlist',safe=False)
+
+def showWishlist(request):
+    wishlist = Wishlist.objects.filter(profile=request.user.profile)
+    return render(request,"products/wishlist.html",{'wishlist':wishlist})
 
 @login_required(login_url="login")
 def checkout(request):
