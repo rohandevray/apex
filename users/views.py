@@ -11,8 +11,6 @@ def loginUser(request):
     if request.method == 'POST':
         username = request.POST['username'].lower()
         password = request.POST['password']
-
-
         try:
            user = User.objects.get(username=username)
         except:
@@ -43,17 +41,17 @@ def registerUser(request):
         password2= request.POST['password2']
 
         if password1 != password2:
-            return HttpResponse("ERROR!")
+            return messages.error(request,"Password is not matched!")
         else:
             try:
                 user=User.objects.get(username=username)
             except:
                 user = None
-            
             if user is None:
-                user = User.objects.create(username=username,password=password1,first_name=name,email=email_id)
+                user = User.objects.create_user(username=username,password=password1,first_name=name,email=email_id)
                 messages.info(request,"User was registered")
-                return redirect('login')
+                login(request,user)
+                return redirect("profile")
     return render(request,"users/register.html")
 
 
@@ -72,12 +70,10 @@ def updateProfile(request):
 
 
 def userProfile(request):
-    user = None
     if request.user.is_authenticated :
-        user =request.user
+        user=request.user
     else:
-        return HttpResponse("go back")
-       
+        return messages.error(request,"Something went wrong!")
     profile = Profile.objects.get(user=user)   
     context ={'profile':profile}
     return render(request,"users/profile.html",context)
